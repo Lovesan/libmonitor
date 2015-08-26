@@ -1,0 +1,4 @@
+* Unix-like systems(use pthreads)
+* Bindings (Common Lisp, etc.)
+* Mingw
+* Older visual studio project files

@@ -1,0 +1,11 @@
+LIBRARY LIBMONITOR
+EXPORTS
+  lm_create         
+  lm_is_valid       
+  lm_free           
+  lm_enter          
+  lm_try_enter
+  lm_exit      
+  lm_wait           
+  lm_pulse          
+  lm_pulse_all      
