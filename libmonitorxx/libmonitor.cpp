@@ -132,7 +132,8 @@ LmMonitor& LmMonitor::operator=(const LmMonitor & rhs)
 
 LmLock LmMonitor::Lock()
 {
-    return LmLock(_m);
+    LmLock l(_m);
+    return l;
 }
 
 LmMonitor::LmMonitor(const LmMonitor & rhs)

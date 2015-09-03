@@ -1,4 +1,4 @@
-* Unix-like systems(use pthreads)
+* Fix LmLock behavior on g++
 * Bindings (Common Lisp, etc.)
 * Mingw
 * Older visual studio project files

@@ -12,6 +12,8 @@
 #else
 #define LM_EXTERN_CLASS __declspec(dllimport)
 #endif
+#else
+#define LM_EXTERN_CLASS
 #endif
 
 class LM_EXTERN_CLASS LmException
@@ -94,7 +96,7 @@ private:
     LmMonitor& operator=(const LmMonitor& rhs);
 };
 
-template<typename T, typename C = std::deque<T>>
+template<typename T, typename C = std::deque<T> >
 class LmQueue
 {
 public:
@@ -106,7 +108,7 @@ public:
 
     bool Add(const T& element, int timeout)
     {
-        LmLock lock = _m.Lock();
+        _m.Enter();
         clock_t cl;
         if (_cap < 0)
         {
@@ -115,6 +117,7 @@ public:
             {
                 _m.PulseAll();
             }
+            _m.Exit();
             return true;
         }
         else
@@ -133,6 +136,7 @@ public:
                 {
                     if (timeout < 0 || !_m.Wait(timeout))
                     {
+                        _m.Exit();
                         return false;
                     }
                     timeout -= ((clock() - cl) / CLOCKS_PER_SEC / 1000);
@@ -144,6 +148,7 @@ public:
             {
                 _m.PulseAll();
             }
+            _m.Exit();
             return true;
         }
     }
@@ -155,7 +160,7 @@ public:
 
     bool Remove(T& element, int timeout)
     {
-        LmLock lock = _m.Lock();
+        _m.Enter();
         clock_t cl;
         if (timeout < 0)
         {
@@ -171,6 +176,7 @@ public:
             {
                 if (timeout < 0 || !_m.Wait(timeout))
                 {
+                    _m.Exit();
                     return false;
                 }
                 timeout -= ((clock() - cl) / CLOCKS_PER_SEC / 1000);
@@ -183,6 +189,7 @@ public:
         {
             _m.PulseAll();
         }
+        _m.Exit();
         return true;
     }
 
@@ -193,7 +200,7 @@ public:
 
     int GetSize()
     {
-        Lock lock = _m.Lock();
+        _m.Lock();
         return _q.size();
     }
 
